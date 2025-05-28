@@ -1,0 +1,23 @@
+﻿=================
+Begin Activation Context Generation.
+Input Parameter:
+	Flags = 0
+	ProcessorArchitecture = AMD64
+	CultureFallBacks = en-US;en
+	ManifestPath = C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\HeapViewer\x64\Debug\HeapViewer.exe
+	AssemblyDirectory = C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\HeapViewer\x64\Debug\
+	Application Config File = 
+-----------------
+INFO: Parsing Manifest File C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\HeapViewer\x64\Debug\HeapViewer.exe.
+	INFO: Manifest Definition Identity is (null).
+	ERROR: Line 2: The attribute lala='' xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'>
+  <trustInfo xmlns='urn:schemas-microsoft-com:asm.v3' >
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level='requireAdministrator' uiAccess='false' />
+      </requestedPrivileges>
+    </security>
+  </trust is not permitted in this context on element assembly.
+ERROR: Activation Context generation failed.
+End Activation Context Generation.
+

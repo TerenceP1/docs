@@ -1,0 +1,10 @@
+﻿  FileEncrypt.cpp
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\FileEncrypt\FileEncrypt\FileEncrypt.cpp(204,13): warning C4267: 'argument': conversion from 'size_t' to 'ULONG', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\FileEncrypt\FileEncrypt\FileEncrypt.cpp(273,9): warning C4101: 'dump': unreferenced local variable
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\FileEncrypt\FileEncrypt\FileEncrypt.cpp(340,9): warning C4101: 'dump': unreferenced local variable
+  Generating code
+  4 of 183 functions ( 2.2%) were compiled, the rest were copied from previous compilation.
+    2 functions were new in current compilation
+    15 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  FileEncrypt.vcxproj -> C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\FileEncrypt\x64\Release\FileEncrypt.exe

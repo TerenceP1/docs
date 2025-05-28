@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script>
+            function TextDn(){
+                document.getElementById("dn_tmp").innerHTML="<a download id=\"dn\" href=\"data:text/cpp;base64,"+btoa(document.getElementById("text").value)+"\"></a>"
+                document.getElementById("dn").click();
+            }
+        </script>
+        <style>
+            .download {
+                width:40px;
+                height:40px;
+            }
+            .download-btn {
+                background: #2c21ca;
+                color: #58ff33;
+            }
+            .code-char {
+                --script: setTimeout(function(alert("debuuuuug!");){},0);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="dn_tmp" hidden>
+
+        </div>
+        <h3>Text editor</h3>
+        <textarea id="text"></textarea>
+        <br>
+        <button onclick="TextDn()" class="download-btn">Download</button>
+    </body>
+</html>

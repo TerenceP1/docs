@@ -1,0 +1,8 @@
+Startup
+Desync
+Allocating...
+Allocated!
+N
+Y
+N
+Y

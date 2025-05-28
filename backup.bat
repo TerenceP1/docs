@@ -1,0 +1,4 @@
+cd C:\Users\teren\Docs and Files\Github_Repos
+git add . -v
+git commit -m "Regular sync"
+git push -u origin master

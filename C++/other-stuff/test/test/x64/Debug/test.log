@@ -1,0 +1,4 @@
+﻿  test.cpp
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\test\test\test.cpp(562,53): warning C4267: 'argument': conversion from 'size_t' to 'DWORD', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\test\test\test.cpp(582,19): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+  test.vcxproj -> C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\test\x64\Debug\test.exe

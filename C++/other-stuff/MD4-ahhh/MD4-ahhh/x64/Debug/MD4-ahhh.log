@@ -1,0 +1,8 @@
+﻿  MD4-ahhh.cpp
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\MD4-ahhh\MD4-ahhh\md4.h(41,17): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+  (compiling source file 'MD4-ahhh.cpp')
+  
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\MD4-ahhh\MD4-ahhh\md4.h(43,20): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file 'MD4-ahhh.cpp')
+  
+  MD4-ahhh.vcxproj -> C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\MD4-ahhh\x64\Debug\MD4-ahhh.exe

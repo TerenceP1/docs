@@ -1,0 +1,22 @@
+#Ignore big .vs directories
+.vs/
+.vs/*
+# *.suo
+# DocumentLayout.json
+# DocumentLayout.backup.json
+# Browse.VC.dbs
+# *.user
+# *.userosscache
+# *.sln.docstates
+#Other repos
+/others/
+# BInaries
+*.exe
+*.pdb
+*.ilk
+*.obj
+*.idb
+*.vsidx
+*.suo
+*.db
+*.ipch

@@ -1,0 +1,3 @@
+﻿  SleepyCowHerding.cpp
+C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\SleepyCowHerding\SleepyCowHerding.cpp(76,16): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  SleepyCowHerding.vcxproj -> C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\SleepyCowHerding\x64\Debug\SleepyCowHerding.exe
