@@ -100,7 +100,7 @@ int main()
     for (auto& t : threadsVec) {
         t.join();
     }
-    cout << "All threads finished. No hash match" << endl;
+    cout << "All threads finished. No hash match :(" << endl;
 	return 0;
 }
 
