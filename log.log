@@ -677,3 +677,24 @@ add 'log.log'
 branch 'main' set up to track 'origin/main'.
 09:42 PM
 Tue 06/03/2025 
+
+C:\Users\teren\Docs and Files\Github_Repos>cd C:\Users\teren\Docs and Files\Github_Repos 
+
+C:\Users\teren\Docs and Files\Github_Repos>git branch -M main 
+
+C:\Users\teren\Docs and Files\Github_Repos>git add . -v 
+add 'backlog.bat'
+add 'log.log'
+add 'Python/reeeeeeeeeg - Copy (2).py'
+add 'Python/reeeeeeeeeg - Copy.py'
+
+C:\Users\teren\Docs and Files\Github_Repos>git commit -m "Regular sync" 
+[main 31cb52e] Regular sync
+ 4 files changed, 64 insertions(+)
+ create mode 100644 Python/reeeeeeeeeg - Copy (2).py
+ create mode 100644 Python/reeeeeeeeeg - Copy.py
+
+C:\Users\teren\Docs and Files\Github_Repos>git push --force -u origin main 
+branch 'main' set up to track 'origin/main'.
+09:44 PM
+Tue 06/03/2025 
