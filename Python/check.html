@@ -1,0 +1,200 @@
+<iframe style="width:100%;height:100%" id="frame" src="about:blank"></iframe>
+<script>
+    let frame=document.getElementById("frame");
+    frame.onload = () => {
+            console.log("iframe loaded");
+            // Now it's safe to access frame.contentDocument
+            //check();
+        };
+            frame.contentDocument.write("<!DOCTYPE HTML>\n<html></html>");
+
+    function ref(arr){
+        let doc=frame.contentDocument;
+        if (!doc) {
+            console.warn('Iframe document not ready');
+        }
+        let cNode= doc/* .documentElement */;
+        for (let i of  arr){
+            cNode=cNode.childNodes[i];
+        }
+        return cNode;
+    }
+    function replace() {
+        
+        doc = frame.contentDocument;
+        // Remove dangerous <meta> tags
+        doc.querySelectorAll('meta').forEach(meta => {
+            const httpEquiv = meta.getAttribute('http-equiv');
+            if (httpEquiv && httpEquiv.toLowerCase() === 'refresh') {
+                meta.remove();
+            }
+        });
+
+        // Remove dangerous <link> tags
+        doc.querySelectorAll('link').forEach(link => {
+            const rel = (link.getAttribute('rel') || '').toLowerCase();
+            const href = link.getAttribute('href') || '';
+
+            if (rel === 'stylesheet') {
+                // Keep valid stylesheets, but block suspicious ones
+                try {
+                    const url = new URL(href, doc.baseURI);
+                    if (url.protocol === 'javascript:' || url.href.includes('<script')) {
+                        link.remove();
+                    }
+                } catch {
+                    link.remove(); // remove malformed URL
+                }
+            } else {
+                // Remove all other link types like import, preload, etc.
+                link.remove();
+            }
+        });
+            const base = document.baseURI;
+            doc.querySelectorAll(["script"]).forEach(el => {
+            const noscript = document.createElement('noscript');
+            el.replaceWith(noscript);
+        });
+        doc.querySelectorAll('link[rel="import"]').forEach(link => {
+            const noscript = document.createElement('noscript');
+            link.replaceWith(noscript);
+        });
+            // Convert attribute URL if it's relative
+            function absolutizeAttr(el, attr) {
+                const val = el.getAttribute(attr);
+                if (val && !val.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/)) { // not absolute
+                    el.setAttribute(attr, new URL(val, base).href);
+                }
+            }
+
+            // Convert inline style URL()s
+            function absolutizeInlineStyle(el) {
+                if (!el.style) return;
+                for (let i = 0; i < el.style.length; i++) {
+                    const prop = el.style[i];
+                    const val = el.style.getPropertyValue(prop);
+                    if (val.includes('url(')) {
+                        el.style.setProperty(prop, val.replace(/url\(["']?(.*?)["']?\)/g, (match, url) => {
+                            if (!url.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/)) {
+                                return `url("${new URL(url, base).href}")`;
+                            }
+                            return match;
+                        }));
+                    }
+                }
+            }
+
+            // Apply to all DOM elements
+            doc.querySelectorAll('*').forEach(el => {
+                ['href', 'src', 'poster', 'data', 'action'].forEach(attr => {
+                    if (el.hasAttribute(attr)) {
+                        absolutizeAttr(el, attr);
+                    }
+                });
+                absolutizeInlineStyle(el);
+            });
+
+            // Handle <style> blocks
+                doc.querySelectorAll('style').forEach(style => {
+                style.textContent = style.textContent.replace(/url\(["']?(.*?)["']?\)/g, (match, url) => {
+                    if (!url.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/)) {
+                        return `url("${new URL(url, base).href}")`;
+                    }
+                    return match;
+                });
+            });
+
+            // Handle <link rel="stylesheet"> content (fetch and rewrite)
+            doc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+                fetch(link.href)
+                    .then(resp => resp.text())
+                    .then(cssText => {
+                        const rewritten = cssText.replace(/url\(["']?(.*?)["']?\)/g, (match, url) => {
+                            if (!url.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/)) {
+                                return `url("${new URL(url, link.href).href}")`;
+                            }
+                            return match;
+                        });
+
+                        const style = document.createElement('style');
+                        style.textContent = rewritten;
+                        document.head.appendChild(style);
+                        link.remove(); // optional: remove original link
+                    });
+            });
+            setTimeout(replace,100);
+        }
+    function check(){
+        fetch("https://pleasing-grubworm-42669.upstash.io/lpop/Queue?_token=AaatAAIjcDFhMWRlMDc3NmVkMDE0NjhmYWVmMmJkZDA1ODZkOTA0N3AxMA").then(
+            function(rsp){
+                rsp.json().then(
+                    function (bl){
+                        if (bl){
+                            //console.log(bl["result"]);
+                            let msg=JSON.parse(bl["result"]);
+                            if (!msg){
+                                return 0;
+                            }
+                            console.log(bl.result);
+                            if (msg.type==="cData"){
+                                ref(msg["node"]).data=msg["value"];
+                            }
+                            else if (msg.type === "attr") {
+                                ref(msg["node"]).setAttribute(msg.attr, msg.nTName)
+                            }
+                            else if (msg.type === "child") {
+                                let parent=ref(msg["node"])
+                                if (msg.nSib==-1){
+                                    for (let i=0;i<msg.removed;i++){
+                                        parent.removeChild(parent.lastChild);
+                                    }
+                                    for (let html of msg.added){
+                                        console.log(html);
+                                        let template = document.createElement('div');
+                                        template.innerHTML = html;
+                                        console.log(template.childNodes[0]);
+                                        console.log(template);
+                                        if (!template) {
+                                            continue;
+                                        }
+                                        if (!template.firstChild) continue;
+                                        if (template.childNodes[0].innerHTML)
+                                        {
+                                            template.childNodes[0].innerHTML='';
+                                        }
+                                        if (html.includes("</"+"html>")){
+                                            continue;
+                                        }
+                                        if (template.tagName == "html" || template.tagName == "body" || template.tagName == "head"){continue;}
+                                        if (template.childNodes[0].tagName=='script'){ template.innerHTML="<scriptoff> </"+"scriptoff>"}
+                                        parent.appendChild(template.childNodes[0]);
+                                    }
+                                }
+                                else{
+                                    for (let i = 0; i < msg.removed; i++) {
+                                        parent.removeChild(parent.childNodes[msg.nSib]);
+                                    }
+                                    let nSib= parent.childNodes[msg.nSib]
+                                    for (let html of msg.added) {
+                                        let template = document.createElement('div');
+                                        template.innerHTML = html;
+                                        if (!template){
+                                            continue;
+                                        }
+                                        if (!template.firstChild) continue;
+                                        if (template.childNodes[0].innerHTML) {
+                                            template.childNodes[0].innerHTML = '';
+                                        }
+                                        parent.insertBefore(template.childNodes[0],nSib);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                )
+            }
+        )
+        setTimeout(check,15);
+    }
+    check();
+</script>

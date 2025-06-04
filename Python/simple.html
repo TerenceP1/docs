@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<body><meta charset="UTF-8" />
+  <title>Real-Time Clock</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #f0f0f0;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    #clock {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+  <h1>Current Time</h1>
+  <div id="clock">--:--:--</div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      document.getElementById('clock').textContent = timeString;
+    }
+
+    // Initial update
+    updateClock();
+
+    // Update every second
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
