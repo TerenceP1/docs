@@ -24,7 +24,7 @@ add_full proc
 	;C-decleration: void add_full(unsigned long long *a, unsigned long long *b, unsigned long long *res, unsigned int len)
 	;Counter in r9 (input)
 	clc
-	:lp
+	lp:
 	dec r9
 	cmp r9,0
 	mov rax, [rcx+r9*8]
@@ -38,7 +38,7 @@ sub_full proc
 	;C-decleration: void add_full(unsigned long long *a, unsigned long long *b, unsigned long long *res, unsigned int len)
 	;Counter in r9 (input)
 	clc
-	:lp
+lp:
 	dec r9
 	cmp r9,0
 	mov rax, [rcx+r9*8]

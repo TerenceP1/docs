@@ -1,2 +1,2 @@
 ﻿  rd4-bust.cpp
-  rd4-bust.vcxproj -> C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\rd4-bust\x64\Debug\rd4-bust.exe
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\rd4-bust\rd4-bust\rd4-bust.cpp(5,10): error C1083: Cannot open include file: 'openssl/md4.h': No such file or directory

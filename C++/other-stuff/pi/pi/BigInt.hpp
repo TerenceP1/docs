@@ -24,7 +24,7 @@ public:
 		BigInt res(len);
 		unsigned char carry = 0;
 		for (int i = len-1; i >= 0; i--) {
-			res[i]
+			//res[i]
 		}
 	}
 };
