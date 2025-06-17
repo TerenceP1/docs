@@ -49,9 +49,11 @@ void threader(int id, Mat& img, double x, double y, int max_itr, double zoom) {
                 double cx = 0, cy = 0;
                 bool black = true;
                 for (int k = 0; k < max_itr; k++) {
-                    double nx = cx * cx - cy * cy + x0;
+					double cxsq = cx * cx;
+					double cysq = cy * cy;
+                    double nx = cxsq - cysq + x0;
                     double ny = 2 * cx * cy + y0;
-                    if (nx * nx + ny * ny > 4.0) {
+                    if (cxsq + cysq > 4.0) {
                         black = false;
                         int r, g, b;
                         hueToRGB(static_cast<float>((int)((k % speclen) / (double)speclen * 360.0) % 360), r, g, b); // Color based on iteration count
@@ -108,11 +110,15 @@ int main()
     zoom = 1.0 / zoom;
     int ind = 0;
     std::string path = "frames";
-
+    cout << "File output name: ";
+    string path2;
+    cin >> path2;
+    cout << "The generation is very CPU intensive so your computer may freeze. Intermediate frames before video finishes will be in the frames folder. A popup will appear with the current frame. Please fullscreen it or else it will make your tasknar disappear (IDK why). Are you sure?" << endl;
+    system("pause > nul | <nul set /p \"=Are you 100% sure about this? Press any key to continue and close this window to cancel...\"");
     if (!filesystem::exists(path)) {
         filesystem::create_directory(path);
     }
-    VideoWriter writer("mandelbrot_zoom_terrible_2.avi", VideoWriter::fourcc('M', 'J', 'P', 'G'), 60, Size(width, height));
+    VideoWriter writer(path2, VideoWriter::fourcc('M', 'J', 'P', 'G'), 60, Size(width, height));
     for (double czoom = 1.0; czoom >= zoom; czoom /= 1.0116194403) {
         cout << ind << endl;
         Mat img = genImg(x, y, maxitr, czoom);
