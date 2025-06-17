@@ -10,6 +10,8 @@
 using namespace std;
 using namespace cv;
 
+int speclen;
+
 #define width 3840 // 4K width
 #define height 2160 // 4K height
 #define threads 16
@@ -52,7 +54,7 @@ void threader(int id, Mat& img, double x, double y, int max_itr, double zoom) {
                     if (nx * nx + ny * ny > 4.0) {
                         black = false;
                         int r, g, b;
-                        hueToRGB(static_cast<float>((int)((k % 100) / 100.0 * 360.0) % 360), r, g, b); // Color based on iteration count
+                        hueToRGB(static_cast<float>((int)((k % speclen) / (double)speclen * 360.0) % 360), r, g, b); // Color based on iteration count
                         img.at<Vec3b>(i, j) = Vec3b(b, g, r);
                         break;
                     }
@@ -95,6 +97,11 @@ int main()
     cin >> y;
     cout << "zoom: ";
     cin >> zoom;
+    cout << "MaxItr (default 1000): ";
+    int maxitr;
+    cin >> maxitr;
+    cout << "Spectrum length (default 100): ";
+    cin >> speclen;
     zoom = 1.0 / zoom;
     int ind = 0;
     std::string path = "frames";
@@ -105,7 +112,7 @@ int main()
     VideoWriter writer("mandelbrot_zoom_terrible_2.avi", VideoWriter::fourcc('M', 'J', 'P', 'G'), 60, Size(width, height));
     for (double czoom = 1.0; czoom >= zoom; czoom /= 1.0116194403) {
         cout << ind << endl;
-        Mat img = genImg(x, y, 4000, czoom);
+        Mat img = genImg(x, y, maxitr, czoom);
         string filename = "frames/mandelbrot_" + to_string(ind++) + ".png";
         Mat resized;
         double scale = 0.5; // or whatever fits your screen nicely
