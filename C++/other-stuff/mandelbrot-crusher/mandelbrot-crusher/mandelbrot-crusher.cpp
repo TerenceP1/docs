@@ -102,6 +102,9 @@ int main()
     cin >> maxitr;
     cout << "Spectrum length (default 100): ";
     cin >> speclen;
+    double scale;
+    cout << "Scale for display (reletive to 4k) (default 1): ";
+    cin >> scale;
     zoom = 1.0 / zoom;
     int ind = 0;
     std::string path = "frames";
@@ -115,9 +118,9 @@ int main()
         Mat img = genImg(x, y, maxitr, czoom);
         string filename = "frames/mandelbrot_" + to_string(ind++) + ".png";
         Mat resized;
-        double scale = 0.5; // or whatever fits your screen nicely
+        //double scale = 0.5; // or whatever fits your screen nicely
         resize(img, resized, Size(), scale, scale, INTER_LINEAR);
-        imshow("Preview", img);
+        imshow("Preview", resized);
         imwrite(filename, img);
         waitKey(1);
         writer.write(img); // Write the frame to the video file
