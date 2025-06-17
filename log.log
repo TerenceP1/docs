@@ -700,3 +700,16 @@ branch 'main' set up to track 'origin/main'.
 Tue 06/03/2025 
 09:51 PM
 Mon 06/16/2025 
+
+C:\Users\teren\Docs and Files\Github_Repos>cd C:\Users\teren\Docs and Files\Github_Repos 
+
+C:\Users\teren\Docs and Files\Github_Repos>git branch -M main 
+
+C:\Users\teren\Docs and Files\Github_Repos>git add . -v 
+add 'log.log'
+
+C:\Users\teren\Docs and Files\Github_Repos>git commit -m "Regular sync" 
+[main d4c4668] Regular sync
+ 1 file changed, 2 insertions(+)
+
+C:\Users\teren\Docs and Files\Github_Repos>git push --force -u origin main 
