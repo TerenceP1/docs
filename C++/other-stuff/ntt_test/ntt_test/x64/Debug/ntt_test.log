@@ -1,0 +1,9 @@
+﻿  ntt_test.cpp
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\ntt_test\ntt_test.cpp(55,23): warning C4244: 'initializing': conversion from 'ULL' to 'int', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\ntt_test\ntt_test.cpp(58,24): warning C4244: 'initializing': conversion from 'ULL' to 'int', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\ntt_test\ntt_test.cpp(58,58): warning C4244: '+=': conversion from 'ULL' to 'int', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\ntt_test\ntt_test.cpp(64,24): warning C4244: 'initializing': conversion from 'ULL' to 'int', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\ntt_test\ntt_test.cpp(64,58): warning C4244: '+=': conversion from 'ULL' to 'int', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\ntt_test\ntt_test.cpp(69,24): warning C4244: 'initializing': conversion from 'ULL' to 'int', possible loss of data
+C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\ntt_test\ntt_test.cpp(69,65): warning C4244: '+=': conversion from 'ULL' to 'int', possible loss of data
+  ntt_test.vcxproj -> C:\Users\teren\Docs and Files\Github_Repos\C++\other-stuff\ntt_test\x64\Debug\ntt_test.exe

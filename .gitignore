@@ -20,3 +20,8 @@
 *.suo
 *.db
 *.ipch
+*.ipdb
+mandelbrot*.png
+*.mp4
+*.avi
+*.iobj
