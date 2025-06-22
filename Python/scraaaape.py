@@ -242,7 +242,7 @@ with sync_playwright() as p:
     main_page = context.new_page()
     #handle_new_page(main_page)
     pages.append(main_page)
-    main_page.goto("https://example.com")
+    main_page.goto("https://google.com")
     main_page.wait_for_load_state('networkidle')
     
 
