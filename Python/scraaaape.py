@@ -4,6 +4,8 @@ import time
 import requests
 import os
 import re
+import numpy as np
+import cv2
 
 from urllib.parse import urlparse, urlunparse
 
@@ -44,6 +46,13 @@ def add_html_extension(url):
 
 js_init_script = """
 (function() {
+document.addEventListener('load', () => {
+  // Your code here runs after DOM is loaded
+if (window.location.href === 'about:blank') {
+  window.close();
+}
+setTimeout(() => window.close(), 30000);
+});
     var seen = {};
     var queue = [];
     var timer = null;
@@ -70,6 +79,7 @@ js_init_script = """
 
         if (!seen[href] && href.indexOf('http') === 0) {
             seen[href] = true;
+            if (href=="about:blank"){return;}
             window.open(href, '_blank');
         }
     }
@@ -153,6 +163,8 @@ def close_duplicate_tabs(context):
     seen_urls = set()
     for page in context.pages:
         url = page.url
+        if url=="about:blank":
+            page.close()
         if url in seen_urls:
             print(f"Closing duplicate tab: {url}")
             page.close()
@@ -173,10 +185,11 @@ def remove_https(url):
         return url[len("https://"):]
     return url
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False)
+    browser = p.chromium.launch(headless=True)
     context = browser.new_context()
     pages = []
     context.add_init_script(js_init_script)
+    #INIT
     def sanitize_url_for_filename(url):
         # Remove query and fragment
         parsed = urlparse(url)
@@ -190,7 +203,28 @@ with sync_playwright() as p:
         # Replace illegal filename characters
         safe_path = re.sub(r'[<>:"|?*]', '_', safe_path)
         return safe_path
+    #REQUEST DOWNLOAD LOG
+    def rqhandle(request):
+        if not (request.resource_type in ["xhr","fetch"]):
+            if request.method == "GET":
+                rsp=requests.get(request.url,headers=request.headers)
+                os.makedirs(os.path.dirname("scraped/"+sanitize_url_for_filename(remove_https(add_html_extension(request.url)))), exist_ok=True)
+                scraped=open("scraped/"+sanitize_url_for_filename(remove_https(add_html_extension(request.url))),'wb')
+                scraped.write(rsp.content)
+                scraped.close()
+    def limit_tab_count(context, max_tabs=20):
+        pages = context.pages
+        if len(pages) > max_tabs:
+            to_close = random.sample([p for p in pages if not p.is_closed()], len(pages) - max_tabs)
+            for p in to_close:
+                try:
+                    print(f"❌ Closing tab: {p.url}")
+                    p.close()
+                except Exception as e:
+                    print(f"⚠️ Failed to close tab: {e}")
+    #NEW PAGE HANDELER
     def handle_new_page(new_page):
+        new_page.on("request",rqhandle)
         pages.append(new_page)
         print("⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ PAGE PAGE PAGE PAGE PAGE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️\n⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ PAGE PAGE PAGE PAGE PAGE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️\n⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ PAGE PAGE PAGE PAGE PAGE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️\n⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ PAGE PAGE PAGE PAGE PAGE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️\n⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ PAGE PAGE PAGE PAGE PAGE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️\n")
         #os.system("start cmd")
@@ -235,24 +269,42 @@ with sync_playwright() as p:
             scraped.close()
         except Exception as e:
             print(f"⚠️ New tab failed to load. Error message: {e}")
+            limit_tab_count(context,30)
     context.on("page", handle_new_page)
+
+
 
 
     # Start with one main page
     main_page = context.new_page()
     #handle_new_page(main_page)
     pages.append(main_page)
-    main_page.goto("https://google.com")
-    main_page.wait_for_load_state('networkidle')
-    
+    main_page.goto("https://google.com", wait_until='commit',timeout=0)
+    #main_page.wait_for_load_state('networkidle')
+    """  # Start with one main page
+    p2 = context.new_page()
+    #handle_new_page(main_page)
+    pages.append(p2)
+    p2.goto("https://google.com")
+    p2.wait_for_load_state('networkidle') """
 
+    """ # Start with one main page
+    p3 = context.new_page()
+    #handle_new_page(main_page)
+    pages.append(p3)
+    p3.goto("https://bing.com")
+    p3.wait_for_load_state('networkidle') """
+    print("LOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\nLOOP!!!!!!!!!!!!!LOOOOOOOOOOOOOOOOOOP!!!!!!!!!!!\n")
+    #PAGE MADE
     for i in range(2000):
+        #CLIIIICK
         open_pages = [p for p in pages if not p.is_closed()]
         if not open_pages:
             print("❌ No open pages left.")
             break
 
         current_page = random.choice(open_pages)
+        print("SWITCH\nSWITCH\nSWITCH\nSWITCH\nSWITCH\nSWITCH\nSWITCH\n")
         try:
             current_page.wait_for_load_state('domcontentloaded', timeout=3000)
             current_page.bring_to_front()
@@ -264,17 +316,28 @@ with sync_playwright() as p:
         height = viewport['height']
         x = random.randint(0, width - 1)
         y = random.randint(0, height - 1)
-
+        print("CLICK\nCLICK\nCLICK\nCLICK\nCLICK\nCLICK\nCLICK\nCLICK\n")
         try:
             current_page.mouse.move(x, y)
             current_page.mouse.click(x, y)
             print(f"🖱️ Clicked at ({x}, {y}) on {current_page.url}")
+
             close_duplicate_tabs(context)
             dump_tabs_to_file(context)
         except Exception as e:
             print(f"⚠️ Error clicking at ({x}, {y}): {e}")
-
+        screenshot_bytes = current_page.screenshot()
         time.sleep(random.uniform(0.01, 0.1))
+        # Convert bytes to numpy array
+        nparr = np.frombuffer(screenshot_bytes, np.uint8)
+
+        # Decode image from memory (PNG/JPEG)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        # Display with OpenCV
+        cv2.imshow('Screenshot', img)
+        cv2.waitKey(0)  # Wait for a key press to close window
+        cv2.destroyAllWindows()
 
     time.sleep(60)
     browser.close()
