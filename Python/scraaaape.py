@@ -1,6 +1,44 @@
 from playwright.sync_api import sync_playwright
 import random
 import time
+import requests
+import os
+
+from urllib.parse import urlparse, urlunparse
+
+def get_with_browser_headers(url):
+    print("FETCHEING\nFETCHING")
+    headers = {
+        "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/114.0.0.0 Safari/537.36"),
+        "Accept": ("text/html,application/xhtml+xml,application/xml;"
+                   "q=0.9,image/webp,image/apng,*/*;q=0.8"),
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "identity",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        # Add more headers as needed
+    }
+    response = requests.get(url, headers=headers)
+    print("FETCHED\nFETCHED")
+    os.system("start cmd")
+    return response
+
+def add_html_extension(url):
+    parsed = urlparse(url)
+    path = parsed.path
+
+    if not path.endswith('.html'):
+        # Append '.html' if the path doesn't end with it
+        if path.endswith('/'):
+            path = path[:-1]  # remove trailing slash first
+        path += '.html'
+
+        # Rebuild the URL with updated path
+        parsed = parsed._replace(path=path)
+        return urlunparse(parsed)
+    return url
 
 js_init_script = """
 (function() {
@@ -109,6 +147,29 @@ js_init_script = """
 
 """
 
+def close_duplicate_tabs(context):
+    seen_urls = set()
+    for page in context.pages:
+        url = page.url
+        if url in seen_urls:
+            print(f"Closing duplicate tab: {url}")
+            page.close()
+        else:
+            seen_urls.add(url)
+
+def dump_tabs_to_file(context, filename="open_tabs.txt"):
+    with open(filename, "w", encoding="utf-8") as f:
+        for page in context.pages:
+            try:
+                url = page.url
+                title = page.title()
+                f.write(f"{title} — {url}\n")
+            except Exception as e:
+                f.write(f"Error reading page info: {e}\n")
+def remove_https(url):
+    if url.startswith("https://"):
+        return url[len("https://"):]
+    return url
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
     context = browser.new_context()
@@ -119,6 +180,10 @@ with sync_playwright() as p:
         pages.append(new_page)
         try:
             new_page.wait_for_load_state('load', timeout=10000)
+            os.makedirs(os.path.dirname(remove_https(add_html_extension(new_page.url))), exist_ok=True)
+            scraped=open(remove_https(add_html_extension(new_page.url)),'w')
+            scraped.write(get_with_browser_headers(new_page.url).text)
+            scraped.close()
         except:
             print("⚠️ New tab failed to load")
 
@@ -127,7 +192,7 @@ with sync_playwright() as p:
     # Start with one main page
     main_page = context.new_page()
     pages.append(main_page)
-    main_page.goto("https://example.com")
+    main_page.goto("https://sample-files.com/downloads/documents/pdf/basic-text.pdf")
     main_page.wait_for_load_state('networkidle')
     
 
@@ -154,6 +219,8 @@ with sync_playwright() as p:
             current_page.mouse.move(x, y)
             current_page.mouse.click(x, y)
             print(f"🖱️ Clicked at ({x}, {y}) on {current_page.url}")
+            close_duplicate_tabs(context)
+            dump_tabs_to_file(context)
         except Exception as e:
             print(f"⚠️ Error clicking at ({x}, {y}): {e}")
 
