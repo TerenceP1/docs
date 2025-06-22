@@ -1,1 +1,24 @@
- — https://sample-files.com/downloads/documents/pdf/basic-text.pdf
+Example Domain — https://example.com/
+Example Domains — https://www.iana.org/help/example-domains
+Domain Name Services — https://www.iana.org/domains
+Internet Assigned Numbers Authority — https://www.iana.org/
+Protocol Registries — https://www.iana.org/protocols
+Number Resources — https://www.iana.org/numbers
+About us — https://www.iana.org/about
+RFC 2606: Reserved Top Level DNS Names — https://www.rfc-editor.org/rfc/rfc2606.html
+RFC 6761: Special-Use Domain Names — https://www.rfc-editor.org/rfc/rfc6761.html
+» RFC Editor — https://www.rfc-editor.org/
+Root Zone Management — https://www.iana.org/domains/root
+Intergovernmental Treaty (.INT) Domains — https://www.iana.org/domains/int
+ — https://www.rfc-editor.org/rfc/rfc2606.txt
+ — https://www.rfc-editor.org/rfc/rfc6761.txt
+.ARPA Domain — https://www.iana.org/domains/arpa
+ — https://www.rfc-editor.org/rfc/pdfrfc/rfc2606.txt.pdf
+ — https://www.rfc-editor.org/rfc/pdfrfc/rfc6761.txt.pdf
+Repository of IDN Practices — https://www.iana.org/domains/idn-tables
+RFC 2606 - Reserved Top Level DNS Names — https://datatracker.ietf.org/doc/rfc2606/
+RFC 6761 - Special-Use Domain Names — https://datatracker.ietf.org/doc/rfc6761/
+Just a moment... — https://datatracker.ietf.org/ipr/search/?rfc=2606&submit=rfc
+DNSSEC Information — https://www.iana.org/dnssec
+Repository of IDN Practices — https://www.iana.org/domains/idn-tables
+Just a moment... — https://datatracker.ietf.org/ipr/search/?rfc=6761&submit=rfc
