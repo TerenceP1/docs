@@ -1,0 +1,4 @@
+# This robots.txt file is a error file because https://quotes.toscrape.com/robots.txt responded with code 404
+# This robots.txt will allow all bots
+User-agent: *
+Allow: /

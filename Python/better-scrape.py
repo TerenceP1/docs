@@ -3,6 +3,46 @@ import asyncio
 import random
 from playwright.async_api import async_playwright
 from playwright.async_api import TimeoutError
+import os
+from urllib.parse import urlparse
+import aiohttp
+import xml.etree.ElementTree as ET
+
+async def fetch_sitemap_recursive(url, visited=None):
+    if visited is None:
+        visited = set()
+    if url in visited:
+        return []
+    visited.add(url)
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status != 200:
+                print(f"Failed to fetch {url}: {response.status}")
+                return []
+            text = await response.text()
+            root = ET.fromstring(text)
+            namespace = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+
+            urls = []
+            # Check if it's a sitemap index
+            if root.tag.endswith('sitemapindex'):
+                sitemap_elems = root.findall('sm:sitemap', namespace)
+                for sitemap_elem in sitemap_elems:
+                    loc = sitemap_elem.find('sm:loc', namespace)
+                    if loc is not None and loc.text:
+                        nested_urls = await fetch_sitemap_recursive(loc.text, visited)
+                        urls.extend(nested_urls)
+            else:
+                # It's a regular sitemap, parse URLs
+                urls = [elem.text for elem in root.findall('.//sm:loc', namespace)]
+
+            return urls
+
+
+def get_host(url):
+    parsed = urlparse(url if "://" in url else "http://" + url)
+    return parsed.hostname
 
 async def url_already_open(context, url):
     await asyncio.sleep(random.random())
@@ -46,7 +86,7 @@ async def click_with_navigation_check(page, i):
         print("No navigation happened, continuing as normal.")
 
 
-domain_seed="https://google.com"
+domain_seed="https://dictionary.com"
 
 context=None
 
@@ -88,6 +128,44 @@ async def new_page_handeler(page):
         await page.close()
         print("DUPLICATE PAGE CLOSED!!!")
         return
+    # Fetch robots.txt
+    host=get_host(page.url)
+    robopath=f"scraper/robo/{host}_robots.txt"
+    if not os.path.exists(robopath):
+        #fetch
+        content=None
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get("https://"+host+"/robots.txt") as response:
+                    if response.status==200:
+                        content=await response.text()
+                    else:
+                        content=(f"# This robots.txt file is a error file because https://{host}/robots.txt responded with code {response.status}\n# This robots.txt will allow all bots\nUser-agent: *\nAllow: /")
+        except Exception as e:
+            content=(f"# This robots.txt file is a error file because a(n) {type(e)} occered while fetching https://{host}/robots.txt: {str(e).replace('\\', '\\\\').text.replace('\n', '\\n')}\n# This robots.txt will allow all bots\nUser-agent: *\nAllow: /")
+        print("FETCHED!!!");print("FETCHED!!!");print("FETCHED!!!");print("FETCHED!!!");print("FETCHED!!!")
+        with open(robopath,'w') as robofile:
+            robofile.write(content)
+        print("WRITTEN!!");print("WRITTEN!!");print("WRITTEN!!");print("WRITTEN!!");print("WRITTEN!!")
+        # Grab sitemaps
+        sitemap_urls=set([])
+        sitemaps = []
+        
+        for line in content.splitlines():
+            line = line.strip()
+            if line.lower().startswith("sitemap:"):
+                # Extract URL after 'Sitemap:'
+                sitemap_url = line.split(":", 1)[1].strip()
+                sitemaps.append(sitemap_url)
+        for i in sitemaps:
+            sitemap_urls=sitemap_urls | set(await fetch_sitemap_recursive(i))
+        print(sitemap_urls)
+        smpath=f"scraper/robo/{host}_sitemap_urls.txt"
+
+        with open(smpath,'w') as smfile:
+            for url in sitemap_urls:
+                print(url)
+                smfile.write(url + '\n')  # add newline for each url
     # Click
     elements = await page.query_selector_all("*:visible")
     await asyncio.sleep(1)
@@ -101,10 +179,12 @@ def nPage(page):
 
 async def main():
     global context
+    os.makedirs(os.path.dirname("scraper/robo/"), exist_ok=True)
     async with async_playwright() as p:
         # Launch Chromium browser (headless=False to see the browser)
         browser = await p.chromium.launch(headless=False)
         context = await browser.new_context(
+            
             permissions=[],          # grant no permissions at all
         geolocation=None,        # disable geolocation
         locale="en-US"           # optional: set locale
@@ -114,7 +194,7 @@ async def main():
         page = await context.new_page()
         
         # Navigate to example.com
-        await page.goto("https://google.com")
+        await page.goto("https://quotes.toscrape.com/")
         nPage(page)
         asyncio.create_task(sift_duplicate_pages_loop())
         
