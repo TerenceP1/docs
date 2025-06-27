@@ -1,0 +1,4 @@
+# This robots.txt file is a error file because a(n) aiohttp.client_exceptions.ClientConnectorDNSError occered while fetching https://about/robots.txt: Cannot connect to host about:443 ssl:default [getaddrinfo failed]
+# This robots.txt will allow all bots
+User-agent: *
+Allow: /
