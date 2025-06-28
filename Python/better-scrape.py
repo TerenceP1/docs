@@ -287,7 +287,7 @@ async def main():
         page = await context.new_page()
         
         # Navigate to example.com
-        await page.goto("https://en.wikipedia.org/")
+        await page.goto("https://dictionary.com/")
         nPage(page)
         asyncio.create_task(sift_duplicate_pages_loop())
         
