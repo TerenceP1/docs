@@ -2,7 +2,7 @@ import cv2
 import glob
 
 # 1. Get all image files matching the pattern, sorted alphabetically
-image_files = sorted(glob.glob("intruder_contour_diff_*.jpg"))
+image_files = sorted(glob.glob("intruder_*.jpg"))
 
 if not image_files:
     print("No images found.")
@@ -19,10 +19,11 @@ fps = 30  # You can change the frame rate
 
 # 3. Create the video writer
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # For .mp4 output
-video_writer = cv2.VideoWriter("output_dff_video.mp4", fourcc, fps, (width, height))
+video_writer = cv2.VideoWriter("output_all_video.mp4", fourcc, fps, (width, height))
 
 # 4. Write each image to the video
 for filename in image_files:
+    print(filename)
     frame = cv2.imread(filename)
     if frame is None:
         print(f"Warning: Skipping unreadable file {filename}")
